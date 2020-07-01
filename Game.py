@@ -4,6 +4,7 @@ from pymunk.pyglet_util import DrawOptions
 from pyglet.window import key, mouse
 import math
 import random
+import Wall
 
 options = DrawOptions()
 
@@ -26,6 +27,7 @@ player.position = 640, 15
 body.position = 640, 15
 
 space.add(player, body, ball, ball_body)
+space.add(Wall.wall1_body, Wall.right_wall, Wall.wall2_body, Wall.left_wall, Wall.wall3_body, Wall.top_wall)
 
 left_pressed = False
 right_pressed = False
