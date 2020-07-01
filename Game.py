@@ -6,13 +6,15 @@ import math
 import random
 import Wall
 
+speed = 10
+
 options = DrawOptions()
 
 window = pyglet.window.Window(1280, 720, "Game", resizable = False)
 
 space = pymunk.Space()
 space.gravity = 0, 0
-body = pymunk.Body(1, 100)
+body = pymunk.Body(1, 100, pymunk.Body.KINEMATIC)
 ball_body = pymunk.Body(1, 100)
 ball_body.position = 640, 360
 ball = pymunk.Circle(ball_body, 10, offset = (0, 0))
@@ -48,15 +50,15 @@ def refresh(time):
     if left_pressed == True and right_pressed == False:
         x, y = player.position
         if x > 125:
-            player.position = x - 5, y
+            player.position = x - speed, y
             x,y = body.position
-            body.position = x - 5, y
+            body.position = x - speed, y
     elif right_pressed == True and left_pressed == False:
         x, y = player.position
         if x < 1155:
-            player.position = x + 5, y
+            player.position = x + speed, y
             x,y = body.position
-            body.position = x + 5, y
+            body.position = x + speed, y
 
 @window.event
 def on_key_press(symbol, modifiers):
@@ -66,17 +68,17 @@ def on_key_press(symbol, modifiers):
         right_pressed = False
         x, y = player.position
         if x > 125:
-            player.position = x - 5, y
+            player.position = x - speed, y
             x,y = body.position
-            body.position = x - 5, y
+            body.position = x - speed, y
     elif symbol == key.D or symbol == key.RIGHT:
         left_pressed = False
         right_pressed = True
         x, y = player.position
         if x < 1155:
-            player.position = x + 5, y
+            player.position = x + speed, y
             x,y = body.position
-            body.position = x + 5, y
+            body.position = x + speed, y
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -87,5 +89,5 @@ def on_key_release(symbol, modifiers):
         right_pressed = False
     
 if __name__ == "__main__":
-    pyglet.clock.schedule_interval(refresh, 1.0/60.0)
+    pyglet.clock.schedule_interval(refresh, 1.0/120.0)
     pyglet.app.run()
