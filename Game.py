@@ -2,16 +2,20 @@ import pymunk
 import pyglet
 from pymunk.pyglet_util import DrawOptions
 from pyglet.window import key, mouse
+import math
+import random
 
 options = DrawOptions()
 
 window = pyglet.window.Window(1280, 720, "Game", resizable = False)
 
 space = pymunk.Space()
+space.gravity = 0, 0
 body = pymunk.Body(1, 100)
 ball_body = pymunk.Body(1, 100)
 ball_body.position = 640, 360
 ball = pymunk.Circle(ball_body, 10, offset = (0, 0))
+body.position = 640, 360
 ball.position = 640, 360
 body.elasticity = 0.99
 ball.elasticity = 0.99
@@ -21,10 +25,15 @@ player.elasticity = 0.99
 player.position = 640, 15
 body.position = 640, 15
 
-space.add(player, body, ball)
+space.add(player, body, ball, ball_body)
 
 left_pressed = False
 right_pressed = False
+ball_body.position = player.position
+power = 4.5
+ball_body.angle = 0.0
+ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
+ball_body.apply_force_at_local_point((1000 * power, 720), (1000 * power, 720)) 
 
 @window.event
 def on_draw():
