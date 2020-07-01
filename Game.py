@@ -23,7 +23,11 @@ ball.position = 640, 360
 body.elasticity = 0.99
 ball.elasticity = 0.99
 
-player = pymunk.Poly.create_box(body, size=(250, 5))
+# ball.color = (255, 0, 0, 255)
+
+width = 250
+
+player = pymunk.Poly.create_box(body, size=(width, 5))
 player.elasticity = 0.99
 player.position = 640, 15
 body.position = 640, 15
@@ -37,7 +41,21 @@ ball_body.position = player.position
 power = 4.5
 ball_body.angle = 0.0
 ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
-ball_body.apply_force_at_local_point((1000 * power, 720), (1000 * power, 720)) 
+ball_body.apply_force_at_local_point((1000 * power, 720), (1000 * power, 720))
+count = 1
+
+player.friction = 0
+body.friction = 0
+ball.friction = 0
+ball_body.friction = 0
+
+damp_level = 1
+
+def zero_gravity(body, gravity, damping, dt):
+    pymunk.Body.update_velocity(body, (0,0), damp_level, dt)
+
+ball_body.velocity_func = zero_gravity
+
 
 @window.event
 def on_draw():
@@ -45,17 +63,28 @@ def on_draw():
     space.debug_draw(options)
 
 def refresh(time):
-    global left_pressed, right_pressed
+    global left_pressed, right_pressed, count, velocity, energy, damp_level
     space.step(time)
+    print(ball_body.velocity)
+    if count == 1:
+        velocity = ball_body.velocity
+        energy = ball_body.kinetic_energy
+    else:
+        if pymunk.SegmentQueryInfo == None:
+            ball_body.velocity = velocity
+    damp_level = energy/ball_body.kinetic_energy
+    print(damp_level)
+    count += 1
+    velocity = ball_body.velocity
     if left_pressed == True and right_pressed == False:
         x, y = player.position
-        if x > 125:
+        if x > width/2:
             player.position = x - speed, y
             x,y = body.position
             body.position = x - speed, y
     elif right_pressed == True and left_pressed == False:
         x, y = player.position
-        if x < 1155:
+        if x < 1280 - width/2:
             player.position = x + speed, y
             x,y = body.position
             body.position = x + speed, y
@@ -67,7 +96,7 @@ def on_key_press(symbol, modifiers):
         left_pressed = True
         right_pressed = False
         x, y = player.position
-        if x > 125:
+        if x > width/2:
             player.position = x - speed, y
             x,y = body.position
             body.position = x - speed, y
@@ -75,7 +104,7 @@ def on_key_press(symbol, modifiers):
         left_pressed = False
         right_pressed = True
         x, y = player.position
-        if x < 1155:
+        if x < 1280 - width/2:
             player.position = x + speed, y
             x,y = body.position
             body.position = x + speed, y
