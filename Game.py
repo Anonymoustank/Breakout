@@ -11,7 +11,7 @@ space = pymunk.Space()
 body = pymunk.Body(1, 100)
 ball_body = pymunk.Body(1, 100)
 ball_body.position = 640, 360
-ball = pymunk.Circle(ball_body, 25, offset = (0, 0))
+ball = pymunk.Circle(ball_body, 10, offset = (0, 0))
 ball.position = 640, 360
 body.elasticity = 0.99
 ball.elasticity = 0.99
@@ -48,14 +48,14 @@ def refresh(time):
 @window.event
 def on_key_press(symbol, modifiers):
     global left_pressed, right_pressed
-    if symbol == key.A:
+    if symbol == key.A or symbol == key.LEFT:
         x, y = player.position
         player.position = x - 5, y
         x,y = body.position
         body.position = x - 5, y
         left_pressed = True
         right_pressed = False
-    elif symbol == key.D:
+    elif symbol == key.D or symbol == key.RIGHT:
         x, y = player.position
         player.position = x + 5, y
         x,y = body.position
@@ -66,16 +66,13 @@ def on_key_press(symbol, modifiers):
 @window.event
 def on_key_release(symbol, modifiers):
     global left_pressed, right_pressed
-    print("hello")
-    if symbol == key.A:
+    if symbol == key.A or symbol == key.LEFT:
         left_pressed = False
         right_pressed = False
-    if symbol == key.D:
+    if symbol == key.D or symbol == key.RIGHT:
         left_pressed = False
         right_pressed = False
-    print(left_pressed, right_pressed)
-
-
+    
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(refresh, 1.0/60.0)
     pyglet.app.run()
