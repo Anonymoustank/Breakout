@@ -5,6 +5,7 @@ from pyglet.window import key, mouse
 import math
 import random
 import Wall
+import Target
 
 speed = 10
 
@@ -23,8 +24,6 @@ ball.position = 640, 360
 body.elasticity = 0.99
 ball.elasticity = 0.99
 
-# ball.color = (255, 0, 0, 255)
-
 width = 125
 
 player = pymunk.Poly.create_box(body, size=(width, 5))
@@ -34,6 +33,8 @@ body.position = 640, 15
 
 space.add(player, body, ball, ball_body)
 space.add(Wall.wall1_body, Wall.right_wall, Wall.wall2_body, Wall.left_wall, Wall.wall3_body, Wall.top_wall)
+for i in Target.all_boxes:
+    space.add(i)
 
 left_pressed = False
 right_pressed = False
@@ -56,6 +57,7 @@ def zero_gravity(body, gravity, damping, dt):
 
 ball_body.velocity_func = zero_gravity
 
+player.color = 0, 100, 200 
 
 @window.event
 def on_draw():
@@ -65,6 +67,9 @@ def on_draw():
 def refresh(time):
     global left_pressed, right_pressed, count, energy, damp_level
     space.step(time)
+    if pymunk.SegmentQueryInfo != None:
+        # print(ball.shapes_collide(Wall.top_wall).points) #length of the list returned will be 0 if there's no collision
+        pass
     if count == 1:
         energy = ball_body.kinetic_energy
     damp_level = energy/ball_body.kinetic_energy
