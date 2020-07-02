@@ -25,7 +25,7 @@ ball.elasticity = 0.99
 
 # ball.color = (255, 0, 0, 255)
 
-width = 250
+width = 125
 
 player = pymunk.Poly.create_box(body, size=(width, 5))
 player.elasticity = 0.99
@@ -63,19 +63,12 @@ def on_draw():
     space.debug_draw(options)
 
 def refresh(time):
-    global left_pressed, right_pressed, count, velocity, energy, damp_level
+    global left_pressed, right_pressed, count, energy, damp_level
     space.step(time)
-    print(ball_body.velocity)
     if count == 1:
-        velocity = ball_body.velocity
         energy = ball_body.kinetic_energy
-    else:
-        if pymunk.SegmentQueryInfo == None:
-            ball_body.velocity = velocity
     damp_level = energy/ball_body.kinetic_energy
-    print(damp_level)
     count += 1
-    velocity = ball_body.velocity
     if left_pressed == True and right_pressed == False:
         x, y = player.position
         if x > width/2:
