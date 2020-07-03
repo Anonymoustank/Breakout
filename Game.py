@@ -9,6 +9,7 @@ import Target
 
 speed = 12
 
+
 options = DrawOptions()
 
 window = pyglet.window.Window(1280, 720, "Game", resizable = False)
@@ -52,6 +53,8 @@ ball_body.friction = 0
 
 damp_level = 1
 
+intro_label = pyglet.text.Label('Press Space to Begin', font_name='Times New Roman', font_size=36, x=window.width//2, y=window.height//2, anchor_x='center', anchor_y='center')
+
 def zero_gravity(body, gravity, damping, dt):
     pymunk.Body.update_velocity(body, (0,0), damp_level, dt)
 
@@ -63,6 +66,8 @@ player.color = 0, 100, 200
 def on_draw():
     window.clear()
     space.debug_draw(options)
+    if started == False:
+        intro_label.draw()
 
 def refresh(time):
     global left_pressed, right_pressed, count, energy, damp_level
