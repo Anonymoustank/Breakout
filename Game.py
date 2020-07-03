@@ -17,10 +17,10 @@ space = pymunk.Space()
 space.gravity = 0, 0
 body = pymunk.Body(1, 100, pymunk.Body.KINEMATIC)
 ball_body = pymunk.Body(1, 100)
-ball_body.position = 640, 360
+# ball_body.position = 640, 360
 ball = pymunk.Circle(ball_body, 10, offset = (0, 0))
 body.position = 640, 360
-ball.position = 640, 360
+ball.position = 640, -100
 body.elasticity = 0.99
 ball.elasticity = 0.99
 
@@ -38,11 +38,11 @@ for i in Target.all_boxes:
 
 left_pressed = False
 right_pressed = False
-ball_body.position = player.position
-power = 4.5
+ball_body.position = 640, -100
+power = 35
 ball_body.angle = 0.0
-ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
-ball_body.apply_force_at_local_point((1000 * power, 1000), (1000 * power, 1000))
+
+started = False
 count = 1
 
 player.friction = 0
@@ -70,10 +70,13 @@ def refresh(time):
     if pymunk.SegmentQueryInfo != None:
         # print(ball.shapes_collide(Wall.top_wall).points) #length of the list returned will be 0 if there's no collision
         pass
-    if count == 1:
+    if count == 1 and started == True:
         energy = ball_body.kinetic_energy
-    damp_level = energy/ball_body.kinetic_energy
-    count += 1
+        count += 1
+    if ball_body.kinetic_energy == 0:
+        damp_level = 1
+    else:
+        damp_level = energy/ball_body.kinetic_energy
     if left_pressed == True and right_pressed == False:
         x, y = player.position
         if x > width/2:
@@ -89,7 +92,7 @@ def refresh(time):
 
 @window.event
 def on_key_press(symbol, modifiers):
-    global left_pressed, right_pressed
+    global left_pressed, right_pressed, started
     if symbol == key.A or symbol == key.LEFT:
         left_pressed = True
         right_pressed = False
@@ -106,6 +109,11 @@ def on_key_press(symbol, modifiers):
             player.position = x + speed, y
             x,y = body.position
             body.position = x + speed, y
+    elif symbol == key.SPACE and started == False:
+        ball_body.position = player.position
+        ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
+        ball_body.apply_force_at_local_point((1000 * power, 1000), (1000 * power, 1000))
+        started = True
 
 @window.event
 def on_key_release(symbol, modifiers):
