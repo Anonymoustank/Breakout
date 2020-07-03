@@ -42,7 +42,7 @@ ball_body.position = player.position
 power = 4.5
 ball_body.angle = 0.0
 ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
-ball_body.apply_force_at_local_point((1000 * power, 720), (1000 * power, 720))
+ball_body.apply_force_at_local_point((1000 * power, 1000), (1000 * power, 1000))
 count = 1
 
 player.friction = 0
