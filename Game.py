@@ -10,6 +10,7 @@ speed = 0
 options = DrawOptions()
 
 window = pyglet.window.Window(1280, 720, "Game", resizable = False)
+window.set_mouse_visible(False)
 
 space = pymunk.Space()
 space.gravity = 0, 0
@@ -60,13 +61,15 @@ def zero_gravity(body, gravity, damping, dt):
 
 ball_body.velocity_func = zero_gravity
 
-player.color = 0, 100, 200 
+player.color = 0, 100, 200 #dark blue
 
 dead = False
 
+has_won = False
+
 @window.event
 def on_draw():
-    global label
+    global label, speed
     window.clear()
     space.debug_draw(options)
     if started == False:
@@ -74,10 +77,18 @@ def on_draw():
     if dead == True:
         label = pyglet.text.Label('Game Over', font_name='Times New Roman', font_size=36, x=window.width//2, y=window.height//2, anchor_x='center', anchor_y='center')
         label.draw()
+    if has_won == True:
+        label = pyglet.text.Label('You Win!', font_name='Times New Roman', font_size=36, x=window.width//2, y=window.height//2, anchor_x='center', anchor_y='center')
+        label.draw()
+        speed = 0
 
 def refresh(time):
-    global left_pressed, right_pressed, count, energy, damp_level, dead, speed
+    global left_pressed, right_pressed, count, energy, damp_level, dead, speed, has_won
     space.step(time)
+    if len(Target.all_boxes) == 0:
+        ball_body.position = -1000, 150
+        ball_body.velocity = 0, 0
+        has_won = True
     ball_x, ball_y = ball_body.position
     if ball_y < 0:
         dead = True
