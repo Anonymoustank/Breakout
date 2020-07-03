@@ -6,10 +6,7 @@ import math
 import random
 import Wall
 import Target
-
-speed = 12
-
-
+speed = 0
 options = DrawOptions()
 
 window = pyglet.window.Window(1280, 720, "Game", resizable = False)
@@ -42,7 +39,7 @@ for i in Target.all_bodies:
 
 left_pressed = False
 right_pressed = False
-ball_body.position = 640, -100
+ball_body.position = -100, 10
 power = 35
 ball_body.angle = 0.0
 
@@ -56,7 +53,7 @@ ball_body.friction = 0
 
 damp_level = 1
 
-intro_label = pyglet.text.Label('Press Space to Begin', font_name='Times New Roman', font_size=36, x=window.width//2, y=window.height//2, anchor_x='center', anchor_y='center')
+label = pyglet.text.Label('Press Space to Begin', font_name='Times New Roman', font_size=36, x=window.width//2, y=window.height//2, anchor_x='center', anchor_y='center')
 
 def zero_gravity(body, gravity, damping, dt):
     pymunk.Body.update_velocity(body, (0,0), damp_level, dt)
@@ -65,16 +62,28 @@ ball_body.velocity_func = zero_gravity
 
 player.color = 0, 100, 200 
 
+dead = False
+
 @window.event
 def on_draw():
+    global label
     window.clear()
     space.debug_draw(options)
     if started == False:
-        intro_label.draw()
+        label.draw()
+    if dead == True:
+        label = pyglet.text.Label('Game Over', font_name='Times New Roman', font_size=36, x=window.width//2, y=window.height//2, anchor_x='center', anchor_y='center')
+        label.draw()
 
 def refresh(time):
-    global left_pressed, right_pressed, count, energy, damp_level
+    global left_pressed, right_pressed, count, energy, damp_level, dead, speed
     space.step(time)
+    ball_x, ball_y = ball_body.position
+    if ball_y < 0:
+        dead = True
+        left_pressed = False
+        right_pressed = False
+        speed = 0
     if pymunk.SegmentQueryInfo != None:
         new_list = []
         for i in Target.all_boxes:
@@ -106,28 +115,30 @@ def refresh(time):
 
 @window.event
 def on_key_press(symbol, modifiers):
-    global left_pressed, right_pressed, started
-    if symbol == key.A or symbol == key.LEFT:
-        left_pressed = True
-        right_pressed = False
-        x, y = player.position
-        if x > width/2:
-            player.position = x - speed, y
-            x,y = body.position
-            body.position = x - speed, y
-    elif symbol == key.D or symbol == key.RIGHT:
-        left_pressed = False
-        right_pressed = True
-        x, y = player.position
-        if x < 1280 - width/2:
-            player.position = x + speed, y
-            x,y = body.position
-            body.position = x + speed, y
-    elif symbol == key.SPACE and started == False:
-        ball_body.position = player.position
-        ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
-        ball_body.apply_force_at_local_point((1000 * power, 1000), (1000 * power, 1000))
-        started = True
+    global left_pressed, right_pressed, started, speed
+    if dead == False:
+        if symbol == key.A or symbol == key.LEFT:
+            left_pressed = True
+            right_pressed = False
+            x, y = player.position
+            if x > width/2:
+                player.position = x - speed, y
+                x,y = body.position
+                body.position = x - speed, y
+        elif symbol == key.D or symbol == key.RIGHT:
+            left_pressed = False
+            right_pressed = True
+            x, y = player.position
+            if x < 1280 - width/2:
+                player.position = x + speed, y
+                x,y = body.position
+                body.position = x + speed, y
+        elif symbol == key.SPACE and started == False:
+            ball_body.position = player.position
+            ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
+            ball_body.apply_force_at_local_point((1000 * power, 1000), (1000 * power, 1000))
+            started = True
+            speed = 12
 
 @window.event
 def on_key_release(symbol, modifiers):
