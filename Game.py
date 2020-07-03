@@ -16,7 +16,6 @@ space = pymunk.Space()
 space.gravity = 0, 0
 body = pymunk.Body(1, 100, pymunk.Body.KINEMATIC)
 ball_body = pymunk.Body(1, 100)
-# ball_body.position = 640, 360
 ball = pymunk.Circle(ball_body, 10, offset = (0, 0))
 body.position = 640, 360
 ball.position = 640, -100
