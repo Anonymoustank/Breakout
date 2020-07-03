@@ -7,7 +7,7 @@ import random
 import Wall
 import Target
 
-speed = 10
+speed = 12
 
 options = DrawOptions()
 
