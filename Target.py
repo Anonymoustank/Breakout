@@ -1,6 +1,7 @@
 import pymunk
 import random
 all_boxes = []
+all_bodies = []
 
 RED = (220,20,30)
 GREEN = (0,205,0)
@@ -11,7 +12,7 @@ y_value = 450
 
 for i in range(1, 60):
     exec("body%s = pymunk.Body(1, 100, pymunk.Body.KINEMATIC)" % i)
-    exec("all_boxes.append(body%s)" % i)
+    exec("all_bodies.append(body%s)" % i)
     box_size = random.randint(50, 100)
     if y_value == 450:
         color = GREEN

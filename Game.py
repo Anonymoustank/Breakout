@@ -37,6 +37,9 @@ space.add(Wall.wall1_body, Wall.right_wall, Wall.wall2_body, Wall.left_wall, Wal
 for i in Target.all_boxes:
     space.add(i)
 
+for i in Target.all_bodies:
+    space.add(i)
+
 left_pressed = False
 right_pressed = False
 ball_body.position = 640, -100
@@ -73,8 +76,14 @@ def refresh(time):
     global left_pressed, right_pressed, count, energy, damp_level
     space.step(time)
     if pymunk.SegmentQueryInfo != None:
-        # print(ball.shapes_collide(Wall.top_wall).points) #length of the list returned will be 0 if there's no collision
-        pass
+        new_list = []
+        for i in Target.all_boxes:
+            if len(ball.shapes_collide(i).points) > 0: #length of the list returned will be 0 if there's no collision
+                i.position = -1000, 0
+                space.remove(i)
+            else:
+                new_list.append(i)
+        Target.all_boxes = new_list
     if count == 1 and started == True:
         energy = ball_body.kinetic_energy
         count += 1
