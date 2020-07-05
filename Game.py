@@ -118,7 +118,6 @@ def refresh(time):
         current_x, current_y = ball_body.velocity
         current_velocity = math.sqrt(current_x ** 2 + current_y ** 2)
         damp_level = (math.sqrt(target_x ** 2 + target_y ** 2))/current_velocity
-        print((math.sqrt(target_x ** 2 + target_y ** 2)) - current_velocity)
     
     if left_pressed == True and right_pressed == False:
         x, y = player.position
