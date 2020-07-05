@@ -16,7 +16,6 @@ space = pymunk.Space()
 space.gravity = 0, 0
 body = pymunk.Body(1, 100, pymunk.Body.KINEMATIC)
 ball_body = pymunk.Body(1, 100)
-# ball_body.position = 640, 360
 ball = pymunk.Circle(ball_body, 10, offset = (0, 0))
 body.position = 640, 360
 ball.position = 640, -100
@@ -67,6 +66,8 @@ dead = False
 
 has_won = False
 
+target_velocity = 0, 0
+
 @window.event
 def on_draw():
     global label, speed
@@ -83,7 +84,7 @@ def on_draw():
         speed = 0
 
 def refresh(time):
-    global left_pressed, right_pressed, count, energy, damp_level, dead, speed, has_won
+    global left_pressed, right_pressed, count, energy, damp_level, dead, speed, has_won, target_velocity, target_x, target_y
     space.step(time)
     if len(Target.all_boxes) == 0:
         ball_body.position = -1000, 150
@@ -105,12 +106,20 @@ def refresh(time):
                 new_list.append(i)
         Target.all_boxes = new_list
     if count == 1 and started == True:
-        energy = ball_body.kinetic_energy
+        # energy = ball_body.kinetic_energy
+        target_velocity = ball_body.velocity
+        target_x, target_y = target_velocity
         count += 1
     if ball_body.kinetic_energy == 0:
         damp_level = 1
     else:
-        damp_level = energy/ball_body.kinetic_energy
+        # damp_level = energy/ball_body.kinetic_energy
+        target_x, target_y = target_velocity
+        current_x, current_y = ball_body.velocity
+        current_velocity = math.sqrt(current_x ** 2 + current_y ** 2)
+        damp_level = (math.sqrt(target_x ** 2 + target_y ** 2))/current_velocity
+        print((math.sqrt(target_x ** 2 + target_y ** 2)) - current_velocity)
+    
     if left_pressed == True and right_pressed == False:
         x, y = player.position
         if x > width/2:
