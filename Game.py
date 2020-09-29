@@ -110,7 +110,7 @@ def refresh(time):
         target_velocity = ball_body.velocity
         target_x, target_y = target_velocity
         count += 1
-    if ball_body.kinetic_energy == 0:
+    if ball_body.velocity == (0, 0):
         damp_level = 1
     else:
         # damp_level = energy/ball_body.kinetic_energy
