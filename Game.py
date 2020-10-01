@@ -154,7 +154,10 @@ def on_key_press(symbol, modifiers):
                 body.position = x + speed, y
         elif symbol == key.SPACE and started == False:
             ball_body.position = player.position
-            ball_body.angle = random.uniform(math.pi/4, (math.pi * 3)/4)
+            if random.randint(1, 2) == 1:
+                ball_body.angle = random.uniform(math.pi/4, math.pi/3)
+            else:
+                ball_body.angle = random.uniform(2 * math.pi / 3, math.pi * 3 / 4)
             ball_body.apply_force_at_local_point((1000 * power, 1000), (1000 * power, 1000))
             started = True
             speed = 12
