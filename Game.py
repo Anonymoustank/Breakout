@@ -31,11 +31,9 @@ body.position = 640, 15
 
 space.add(player, body, ball, ball_body)
 space.add(Wall.wall1_body, Wall.right_wall, Wall.wall2_body, Wall.left_wall, Wall.wall3_body, Wall.top_wall)
-for i in Target.all_boxes:
-    space.add(i)
 
-for i in Target.all_bodies:
-    space.add(i)
+for i in range(len(Target.all_bodies)):
+    space.add(Target.all_bodies[i], Target.all_boxes[i])
 
 left_pressed = False
 right_pressed = False
@@ -60,7 +58,7 @@ def zero_gravity(body, gravity, damping, dt):
 
 ball_body.velocity_func = zero_gravity
 
-player.color = 0, 100, 200 #dark blue
+player.color = 0, 100, 200, 255 #dark blue
 
 dead = False
 

@@ -3,9 +3,9 @@ import random
 all_boxes = []
 all_bodies = []
 
-RED = (220,20,30)
-GREEN = (0,205,0)
-YELLOW = (238,238,0)
+RED = (220,20,30,255)
+GREEN = (0,205,0, 255)
+YELLOW = (238,238,0, 255)
 
 x_value = 0
 y_value = 450
@@ -38,8 +38,8 @@ for i in range(1, 60):
         exec("body%s.position = x_value, y_value" % i)
         exec("body%s.elasticity, box%s.elasticity = 0.99, 0.99" % (i, i))
         exec("body%s.friction, box%s.friction = 0, 0" % (i, i))
-        exec("all_boxes.append(box%s)" % i)
         exec("box%s.color = color" % i)
+        exec("all_boxes.append(box%s)" % i)
         x_value = 0
         y_value += 55
     if y_value > 560:
